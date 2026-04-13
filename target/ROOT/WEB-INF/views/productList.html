@@ -80,7 +80,7 @@
                        th:href="@{/products/{id}(id=${product.id})}"
                        th:text="${product.name}">상품명</a>
                 </td>
-                <td th:text="${product.category}">카테고리</td>
+                <td th:text="${product.category != null ? product.category.name : '-'}">카테고리</td>
 
                 <!--
                     #numbers.formatDecimal(): Thymeleaf 내장 유틸리티 객체
