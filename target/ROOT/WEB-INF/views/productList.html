@@ -34,7 +34,10 @@
     </style>
 </head>
 <body>
-
+    <div
+         th:text="${'실습 수행 일시: ' + #temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss') + ' | 학번: 2071432 | 이름: 고명준'}">
+        실습 수행 일시: 2026-04-13 22:00:00 | 학번: 2071432 | 이름: 고명준
+    </div>
     <h1>상품 목록</h1>
 
     <!--
