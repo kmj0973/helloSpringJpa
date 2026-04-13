@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 카테고리 등록 - Product Management</title>
+    <style>
+        body { font-family: 'Malgun Gothic', Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { border-bottom: 2px solid #4a90d9; padding-bottom: 10px; color: #2c3e50; }
+        .back-btn { display: inline-block; padding: 8px 16px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; margin-bottom: 24px; }
+        .back-btn:hover { background: #545b62; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; color: #495057; }
+        input[type="text"] {
+            width: 100%; padding: 10px 12px; border: 1px solid #ced4da;
+            border-radius: 4px; font-size: 1em; box-sizing: border-box;
+            font-family: inherit;
+        }
+        input:focus {
+            outline: none; border-color: #4a90d9; box-shadow: 0 0 0 3px rgba(74,144,217,0.15);
+        }
+        .field-error { border-color: #e74c3c !important; }
+        .error-msg { color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block; }
+        .btn-submit { background: #4a90d9; color: white; border: none; padding: 12px 32px; font-size: 1em; border-radius: 4px; cursor: pointer; }
+        .btn-submit:hover { background: #357abd; }
+        .hint { font-size: 0.85em; color: #6c757d; margin-top: 4px; }
+        .required { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div th:text="${'실습 수행 일시: ' + #temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss') + ' | 학번: 2071432 | 이름: 고명준'}">
+        실습 수행 일시: 2026-04-13 22:00:00 | 학번: 2071432 | 이름: 고명준
+    </div>
+
+    <h1>새 카테고리 등록</h1>
+
+    <a class="back-btn" th:href="@{/categories}">← 목록으로 돌아가기</a>
+
+    <form th:action="@{/categories/create}" th:object="${categoryForm}" method="post">
+        <div class="form-group">
+            <label htmlFor="name">
+                카테고리명 <span class="required">*</span>
+            </label>
+            <input type="text"
+                   th:field="*{name}"
+                   th:classappend="${#fields.hasErrors('name')} ? 'field-error'"
+                   placeholder="카테고리 이름을 입력하세요" />
+            <span class="error-msg"
+                  th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}">카테고리 오류 메시지</span>
+            <p class="hint">앞뒤 공백은 자동으로 제거됩니다.</p>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn-submit">카테고리 등록</button>
+        </div>
+    </form>
+</body>
+</html>
