@@ -17,6 +17,8 @@
         h1 { border-bottom: 2px solid #4a90d9; padding-bottom: 10px; color: #2c3e50; }
         .btn { display: inline-block; padding: 8px 16px; background: #4a90d9; color: white; text-decoration: none; border-radius: 4px; margin-bottom: 16px; }
         .btn:hover { background: #357abd; }
+        .sub-btn { display: inline-block; padding: 8px 16px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; margin-left: 8px; margin-bottom: 16px; }
+        .sub-btn:hover { background: #545b62; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { background: #4a90d9; color: white; padding: 12px; text-align: left; }
         td { padding: 10px 12px; border-bottom: 1px solid #ddd; vertical-align: middle; }
@@ -51,10 +53,28 @@
     </div>
 
     <a class="btn" th:href="@{/products/create}">+ 새 상품 등록</a>
+    <a class="sub-btn" th:href="@{/categories}">카테고리 관리</a>
 
     <div class="empty-msg" th:if="${#lists.isEmpty(products)}">
         등록된 상품이 없습니다. 새 상품을 등록해 주세요.
     </div>
+
+    <!-- 검색 폼: form method="get" → URL 파라미터로 전송 -->
+    <form th:action="@{/products}" method="get">
+        <!-- th:value로 검색 후에도 입력값이 유지됨 -->
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="상품명 검색"/>
+        <!-- th:each로 카테고리 목록 반복, th:selected로 선택 상태 유지 -->
+        <select name="categoryId">
+            <option value="">-- 전체 카테고리 --</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}" th:text="${cat.name}"
+                    th:selected="${cat.id == categoryId}"></option>
+        </select>  <button type="submit">검색</button>
+    </form>
+
+    <!-- 결과 없음: #lists.isEmpty()로 빈 리스트 감지 -->
+    <p th:if="${#lists.isEmpty(products)}">검색 결과가 없습니다.</p>
+
 
     <table th:unless="${#lists.isEmpty(products)}">
         <thead>

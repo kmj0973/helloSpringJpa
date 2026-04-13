@@ -27,7 +27,6 @@
         input:focus, textarea:focus, select:focus {
             outline: none; border-color: #e67e22; box-shadow: 0 0 0 3px rgba(230,126,34,0.15);
         }
-        /* 검증 오류 스타일 */
         .field-error { border-color: #e74c3c !important; }
         .error-msg { color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block; }
         textarea { height: 120px; resize: vertical; }
@@ -39,8 +38,7 @@
     </style>
 </head>
 <body>
-    <div
-         th:text="${'실습 수행 일시: ' + #temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss') + ' | 학번: 2071432 | 이름: 고명준'}">
+    <div th:text="${'실습 수행 일시: ' + #temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss') + ' | 학번: 2071432 | 이름: 고명준'}">
         실습 수행 일시: 2026-04-13 22:00:00 | 학번: 2071432 | 이름: 고명준
     </div>
 
@@ -49,25 +47,8 @@
         <span class="editing-badge" th:text="'ID: #' + ${productForm.id}">ID: #1</span>
     </h1>
 
-    <!--
-        th:href: 상세 페이지 URL을 동적으로 생성합니다.
-        @{/products/{id}(id=${productForm.id})} → /products/1, /products/2 등
-    -->
     <a class="back-btn" th:href="@{/products/{id}(id=${productForm.id})}">← 상세 페이지로 돌아가기</a>
 
-    <!--
-        수정 폼:
-          - th:action에 {id}를 경로 변수로 사용합니다.
-          - th:object로 productForm을 바인딩합니다.
-
-        [오류 재표시 흐름]
-        1. 사용자가 수정 폼 제출 (POST /products/{id}/edit)
-        2. @Valid 검증 실패 → bindingResult에 오류 저장
-        3. 컨트롤러가 "productEditForm" 뷰 이름 반환
-        4. Spring MVC가 productForm (오류 포함)을 Model에 자동 포함
-        5. Thymeleaf가 th:errors로 오류 메시지 렌더링
-        6. th:classappend로 오류 필드에 빨간 테두리 적용
-    -->
     <form th:action="@{/products/{id}/edit(id=${productForm.id})}"
           th:object="${productForm}"
           method="post">
@@ -76,22 +57,10 @@
             <label for="name">
                 상품명 <span class="required">*</span>
             </label>
-            <!--
-                th:classappend:
-                  - 조건에 따라 CSS 클래스를 추가합니다.
-                  - #fields.hasErrors('name'): 'name' 필드에 검증 오류가 있으면 true
-                  - 오류가 있을 때 "field-error" 클래스 추가 → 빨간 테두리
-            -->
             <input type="text"
                    th:field="*{name}"
                    th:classappend="${#fields.hasErrors('name')} ? 'field-error'"
                    placeholder="상품명을 입력하세요" />
-            <!--
-                th:errors="*{name}":
-                  - 'name' 필드의 모든 검증 오류 메시지를 표시합니다.
-                  - 복수 오류는 <br>로 구분됩니다.
-                  - 오류가 없으면 이 요소는 렌더링되지 않습니다.
-            -->
             <span class="error-msg" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">이름 오류</span>
         </div>
 
@@ -99,13 +68,9 @@
             <label for="category">카테고리</label>
             <select th:field="*{category}">
                 <option value="">-- 카테고리 선택 --</option>
-                <option value="전자제품">전자제품</option>
-                <option value="식품">식품</option>
-                <option value="의류">의류</option>
-                <option value="도서">도서</option>
-                <option value="스포츠">스포츠</option>
-                <option value="가구">가구</option>
-                <option value="기타">기타</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.name}"
+                        th:text="${category.name}">Category</option>
             </select>
             <span class="error-msg" th:if="${#fields.hasErrors('category')}" th:errors="*{category}">카테고리 오류</span>
         </div>
@@ -135,7 +100,6 @@
         <div class="form-group">
             <button type="submit" class="btn-submit">수정 완료</button>
         </div>
-
     </form>
 
 </body>
