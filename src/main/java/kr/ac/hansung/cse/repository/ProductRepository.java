@@ -144,6 +144,16 @@ public class ProductRepository {
     }
 
     // 카테고리 필터: Product의 category.id 로 조회 (p.category.id = JPQL 경로 표현식)
+    public List<Product> findByNameContainingAndCategoryId(String keyword, Long categoryId) {
+        return entityManager.createQuery(
+                        "SELECT p FROM Product p LEFT JOIN FETCH p.category " +
+                                "WHERE p.name LIKE :keyword AND p.category.id = :cid ORDER BY p.id ASC",
+                        Product.class)
+                .setParameter("keyword", "%" + keyword + "%")
+                .setParameter("cid", categoryId)
+                .getResultList();
+    }
+
     public List<Product> findByCategoryId(Long categoryId) {
         return entityManager.createQuery(
                         "SELECT p FROM Product p LEFT JOIN FETCH p.category " +
